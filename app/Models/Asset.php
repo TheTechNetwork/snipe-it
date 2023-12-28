@@ -99,15 +99,16 @@ class Asset extends Depreciable
         'expected_checkin' => 'date|nullable',
         'location_id'     => 'exists:locations,id|nullable',
         'rtd_location_id' => 'exists:locations,id|nullable',
-        'asset_tag'      => 'required|min:1|max:255|unique_undeleted:assets,asset_tag|not_array',
+        'asset_tag'       => 'required|min:1|max:255|unique_undeleted:assets,asset_tag|not_array',
         'purchase_date'   => 'date|date_format:Y-m-d|nullable',
-        'serial'          => 'unique_serial|nullable',
+        'serial'          => 'unique_undeleted:assets,serial|nullable',
         'purchase_cost'   => 'numeric|nullable|gte:0',
         'supplier_id'     => 'exists:suppliers,id|nullable',
         'asset_eol_date'  => 'date|nullable',
         'eol_explicit'    => 'boolean|nullable',
         'byod'            => 'boolean',
     ];
+
 
   /**
    * The attributes that are mass assignable.
@@ -265,7 +266,7 @@ class Asset extends Depreciable
 
     /**
      * Determines if an asset is available for checkout.
-     * This checks to see if the it's checked out to an invalid (deleted) user
+     * This checks to see if it's checked out to an invalid (deleted) user
      * OR if the assigned_to and deleted_at fields on the asset are empty AND
      * that the status is deployable
      *
@@ -752,7 +753,7 @@ class Asset extends Depreciable
     }
 
     /**
-     * Establishes the asset -> status relationship
+     * Establishes the asset -> license seats relationship
      *
      * @author [A. Gianotto] [<snipe@snipe.net>]
      * @since [v4.0]
@@ -919,6 +920,27 @@ class Asset extends Depreciable
         }
         return $cost;
     }
+
+    /**
+     * -----------------------------------------------
+     * BEGIN MUTATORS
+     * -----------------------------------------------
+     **/
+
+    /**
+     * This sets the requestable to a boolean 0 or 1. This accounts for forms or API calls that
+     * explicitly pass the requestable field but it has a null or empty value.
+     *
+     * This will also correctly parse a 1/0 if "true"/"false" is passed.
+     *
+     * @param $value
+     * @return void
+     */
+    public function setRequestableAttribute($value)
+    {
+        $this->attributes['requestable'] = (int) filter_var($value, FILTER_VALIDATE_BOOLEAN);
+    }
+
 
     /**
     * -----------------------------------------------

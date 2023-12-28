@@ -10,6 +10,7 @@ return [
     'create' => [
         'error'   		=> 'El activo no ha sido creado, por favor, inténtelo de nuevo. :(',
         'success' 		=> 'Activo creado con éxito. :)',
+        'success_linked' => 'Asset with tag :tag was created successfully. <strong><a href=":link" style="color: white;">Click here to view</a></strong>.',
     ],
 
     'update' => [
@@ -22,7 +23,7 @@ return [
     'restore' => [
         'error'   		=> 'El activo no fue restaurado, por favor, inténtalo de nuevo',
         'success' 		=> 'Activo restaurado correctamente.',
-        'bulk_success' 		=> 'Equipo restaurado correctamente.',
+        'bulk_success' 		=> 'Activo restaurado correctamente.',
         'nothing_updated'   => 'No se seleccionaron activos, por lo que no se restauró nada.', 
     ],
 

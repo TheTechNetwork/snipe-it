@@ -9,6 +9,7 @@ return [
     'ad_append_domain_help'     => '不要求用户输入“"username@domain.local"，他们只需输入“username”。',
     'admin_cc_email'            => '邮件抄送',
     'admin_cc_email_help'       => '如果你想给用户额外的邮件账户发送签入/签出副本，请在此输入邮箱地址，否则请留空。',
+    'admin_settings'            => '管理员设置',
     'is_ad'				        => '这是AD域服务器',
     'alerts'                	=> '警报',
     'alert_title'               => '更新通知设置',
@@ -358,8 +359,8 @@ return [
     'enable_google_login_help'  => '这些用户将不会被自动配置。 他们必须拥有一个已存在的账户以及 一个 Google Workspace 账户，并且已存在账户的用户名必须与 Google Workspace 账户的电子邮件地址相匹配。 ',
     'mail_reply_to' => '邮件回复地址',
     'mail_from' => '发件人地址',
-    'database_driver' => 'Database Driver',
-    'bs_table_storage' => 'Table Storage',
+    'database_driver' => '数据库驱动程序',
+    'bs_table_storage' => '表存储',
     'timezone' => '时区',
 
 ];

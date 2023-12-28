@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Events\CheckoutableCheckedIn;
-use App\Http\Requests\StoreAssetRequest;
 use Illuminate\Support\Facades\Gate;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
@@ -534,8 +533,10 @@ class AssetsController extends Controller
      * @since [v4.0]
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreAssetRequest $request)
+    public function store(ImageUploadRequest $request)
     {
+        $this->authorize('create', Asset::class);
+        
         $asset = new Asset();
         $asset->model()->associate(AssetModel::find((int) $request->get('model_id')));
 
@@ -545,8 +546,7 @@ class AssetsController extends Controller
         $asset->model_id                = $request->get('model_id');
         $asset->order_number            = $request->get('order_number');
         $asset->notes                   = $request->get('notes');
-        $asset->asset_tag               = $request->get('asset_tag', Asset::autoincrement_asset()); //yup, problem :/
-        // NO IT IS NOT!!! This is never firing; we SHOW the asset_tag you're going to get, so it *will* be filled in!
+        $asset->asset_tag               = $request->get('asset_tag', Asset::autoincrement_asset());
         $asset->user_id                 = Auth::id();
         $asset->archived                = '0';
         $asset->physical                = '1';
@@ -574,10 +574,11 @@ class AssetsController extends Controller
         $asset = $request->handleImages($asset);
 
         // Update custom fields in the database.
-        // Validation for these fields is handled through the AssetRequest form request
-        $model = AssetModel::find($request->get('model_id'));
+        $model = AssetModel::find($request->input('model_id'));
 
-        if (($model) && ($model->fieldset)) {
+        // Check that it's an object and not a collection
+        // (Sometimes people send arrays here and they shouldn't
+        if (($model) && ($model instanceof AssetModel) && ($model->fieldset)) {
             foreach ($model->fieldset->fields as $field) {
 
                 // Set the field value based on what was sent in the request
@@ -754,34 +755,24 @@ class AssetsController extends Controller
      */
     public function restore(Request $request, $assetId = null)
     {
-        // Get asset information
-        $asset = Asset::withTrashed()->find($assetId);
-        $this->authorize('delete', $asset);
 
-        if (isset($asset->id)) {
+        if ($asset = Asset::withTrashed()->find($assetId)) {
+            $this->authorize('delete', $asset);
 
-            if ($asset->deleted_at=='') {
-               $message = 'Asset was not deleted. No data was changed.';
-
-            } else {
-
-                $message = trans('admin/hardware/message.restore.success');
-                // Restore the asset
-                Asset::withTrashed()->where('id', $assetId)->restore();
-
-                $logaction = new Actionlog();
-                $logaction->item_type = Asset::class;
-                $logaction->item_id = $asset->id;
-                $logaction->created_at =  date("Y-m-d H:i:s");
-                $logaction->user_id = Auth::user()->id;
-                $logaction->logaction('restored');
+            if ($asset->deleted_at == '') {
+                return response()->json(Helper::formatStandardApiResponse('error', trans('general.not_deleted', ['item_type' => trans('general.asset')])), 200);
             }
 
-            return response()->json(Helper::formatStandardApiResponse('success', (new AssetsTransformer)->transformAsset($asset, $request), $message));
-        
+            if ($asset->restore()) {
+                return response()->json(Helper::formatStandardApiResponse('success', trans('admin/hardware/message.restore.success')), 200);
+            }
 
+            // Check validation to make sure we're not restoring an asset with the same asset tag (or unique attribute) as an existing asset
+            return response()->json(Helper::formatStandardApiResponse('error', trans('general.could_not_restore', ['item_type' => trans('general.asset'), 'error' => $asset->getErrors()->first()])), 200);
         }
+
         return response()->json(Helper::formatStandardApiResponse('error', null, trans('admin/hardware/message.does_not_exist')), 200);
+
     }
 
     /**
@@ -895,13 +886,17 @@ class AssetsController extends Controller
     public function checkin(Request $request, $asset_id)
     {
         $this->authorize('checkin', Asset::class);
-        $asset = Asset::findOrFail($asset_id);
+        $asset = Asset::with('model')->findOrFail($asset_id);
         $this->authorize('checkin', $asset);
 
 
         $target = $asset->assignedTo;
         if (is_null($target)) {
-            return response()->json(Helper::formatStandardApiResponse('error', ['asset'=> e($asset->asset_tag)], trans('admin/hardware/message.checkin.already_checked_in')));
+            return response()->json(Helper::formatStandardApiResponse('error', [
+                'asset_tag'=> e($asset->asset_tag),
+                'model' => e($asset->model->name),
+                'model_number' => e($asset->model->model_number)
+            ], trans('admin/hardware/message.checkin.already_checked_in')));
         }
 
         $asset->expected_checkin = null;
@@ -935,7 +930,11 @@ class AssetsController extends Controller
         if ($asset->save()) {
             event(new CheckoutableCheckedIn($asset, $target, Auth::user(), $request->input('note'), $checkin_at, $originalValues));
 
-            return response()->json(Helper::formatStandardApiResponse('success', ['asset'=> e($asset->asset_tag)], trans('admin/hardware/message.checkin.success')));
+            return response()->json(Helper::formatStandardApiResponse('success', [
+                'asset_tag'=> e($asset->asset_tag),
+                'model' => e($asset->model->name),
+                'model_number' => e($asset->model->model_number)
+            ], trans('admin/hardware/message.checkin.success')));
         }
 
         return response()->json(Helper::formatStandardApiResponse('error', ['asset'=> e($asset->asset_tag)], trans('admin/hardware/message.checkin.error')));
