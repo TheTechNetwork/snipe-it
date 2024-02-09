@@ -27,7 +27,7 @@ return [
     'accept_assets_menu'    => 'Assets akzeptieren',
     'audit'				    => 'Prüfung',
     'audit_report'			=> 'Prüfungs-Log',
-    'assets'				=> 'Anzahl',
+    'assets'				=> 'Assets',
     'assets_audited'        => 'geprüfte Assets',
     'assets_checked_in_count'     => 'Assets zurückgenommen',
     'assets_checked_out_count'     => 'Assets herausgegeben',
@@ -498,6 +498,8 @@ return [
     'action_permission_denied' => 'Sie haben keine Berechtigung für :action :item_type ID :id',
     'action_permission_generic' => 'Sie haben keine Berechtigung für :action :item_type Id :id',
     'edit' => 'bearbeiten',
-    'action_source' => 'Action Source',
+    'action_source' => 'Aktionsquelle',
+    'or' => 'oder',
+    'url'                   => 'URL',
 
 ];

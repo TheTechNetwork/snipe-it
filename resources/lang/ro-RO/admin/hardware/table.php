@@ -4,11 +4,12 @@ return [
 
     'asset_tag'   	=> 'Eticheta activ',
     'asset_model'       => 'Model',
+    'assigned_to'   => 'Desemnat către',
     'book_value'  	=> 'Valoarea Curentă',
     'change' 		=> 'Predat/Primit',
     'checkout_date' => 'Data predare',
     'checkoutto' 	=> 'Predat',
-    'components_cost' => 'Total Components Cost',
+    'components_cost' => 'Total componente Cost',
     'current_value' => 'Valoarea Curentă',
     'diff' 			=> 'Diferenta',
     'dl_csv' 		=> 'Descarca CSV',

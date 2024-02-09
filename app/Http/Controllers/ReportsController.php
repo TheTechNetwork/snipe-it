@@ -616,7 +616,7 @@ class ReportsController extends Controller
             }
 
             if ($request->filled('url')) {
-                $header[] = trans('admin/manufacturers/table.url');
+                $header[] = trans('general.url');
             }
 
 
@@ -718,10 +718,10 @@ class ReportsController extends Controller
             if ($request->filled('exclude_archived')) {
                 $assets->notArchived();
             }
-            if ($request->input('deleted_assets') == '1') {
+            if ($request->input('deleted_assets') == 'include_deleted') {
                 $assets->withTrashed();
             }
-            if ($request->input('deleted_assets') == '0') {
+            if ($request->input('deleted_assets') == 'only_deleted') {
                 $assets->onlyTrashed();
             }
 
