@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Transformers\GroupsTransformer;
 use App\Models\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class GroupsController extends Controller
@@ -25,7 +26,7 @@ class GroupsController extends Controller
         $this->authorize('view', Group::class);
         $allowed_columns = ['id', 'name', 'created_at', 'users_count'];
 
-        $groups = Group::select('id', 'name', 'permissions', 'created_at', 'updated_at')->withCount('users as users_count');
+        $groups = Group::select('id', 'name', 'permissions', 'created_at', 'updated_at', 'created_by')->with('admin')->withCount('users as users_count');
 
         if ($request->filled('search')) {
             $groups = $groups->TextSearch($request->input('search'));
@@ -61,12 +62,16 @@ class GroupsController extends Controller
     {
         $this->authorize('superadmin');
         $group = new Group;
+        // Get all the available permissions
+        $permissions = config('permissions');
+        $groupPermissions = Helper::selectedPermissionsArray($permissions, $permissions);
 
         $group->name = $request->input('name');
-        $group->permissions = json_encode($request->input('permissions')); // Todo - some JSON validation stuff here
+        $group->created_by = Auth::user()->id;
+        $group->permissions = json_encode($request->input('permissions', $groupPermissions));
 
         if ($group->save()) {
-            return response()->json(Helper::formatStandardApiResponse('success', $group, trans('admin/groups/message.create.success')));
+            return response()->json(Helper::formatStandardApiResponse('success', (new GroupsTransformer)->transformGroup($group), trans('admin/groups/message.success.create')));
         }
 
         return response()->json(Helper::formatStandardApiResponse('error', null, $group->getErrors()));
@@ -84,7 +89,6 @@ class GroupsController extends Controller
     {
         $this->authorize('superadmin');
         $group = Group::findOrFail($id);
-
         return (new GroupsTransformer)->transformGroup($group);
     }
 
@@ -106,7 +110,7 @@ class GroupsController extends Controller
         $group->permissions = $request->input('permissions'); // Todo - some JSON validation stuff here
 
         if ($group->save()) {
-            return response()->json(Helper::formatStandardApiResponse('success', $group, trans('admin/groups/message.update.success')));
+            return response()->json(Helper::formatStandardApiResponse('success', (new GroupsTransformer)->transformGroup($group), trans('admin/groups/message.success.update')));
         }
 
         return response()->json(Helper::formatStandardApiResponse('error', null, $group->getErrors()));

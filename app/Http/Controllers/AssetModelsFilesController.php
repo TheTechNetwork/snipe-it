@@ -16,7 +16,7 @@ class AssetModelsFilesController extends Controller
      *
      * @param UploadFileRequest $request
      * @param int $modelId
-     * @return Redirect
+     * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      *@since [v1.0]
      * @author [A. Gianotto] [<snipe@snipe.net>]
@@ -38,7 +38,7 @@ class AssetModelsFilesController extends Controller
 
                 $file_name = $request->handleFile('private_uploads/assetmodels/','model-'.$model->id,$file);
 
-                $model->logUpload($file_name, e($request->get('notes')));
+                $model->logUpload($file_name, $request->get('notes'));
             }
 
             return redirect()->back()->with('success', trans('general.file_upload_success'));
@@ -70,8 +70,6 @@ class AssetModelsFilesController extends Controller
             }
 
             $file = 'private_uploads/assetmodels/'.$log->filename;
-            \Log::debug('Checking for '.$file);
-
 
             if (! Storage::exists($file)) {
                 return response('File '.$file.' not found on server', 404)

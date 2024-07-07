@@ -5,9 +5,13 @@ namespace App\Models;
 use App\Models\Setting;
 use App\Notifications\AuditNotification;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 trait Loggable
 {
+    // an attribute for setting whether or not the item was imported
+    public ?bool $imported = false;
+
     /**
      * @author  Daniel Meltzer <dmeltzer.devel@gmail.com>
      * @since [v3.4]
@@ -16,6 +20,11 @@ trait Loggable
     public function log()
     {
         return $this->morphMany(Actionlog::class, 'item');
+    }
+
+    public function setImported(bool $bool): void
+    {
+        $this->imported = $bool;
     }
 
     /**
@@ -178,7 +187,7 @@ trait Loggable
 //            try {
 //                $target->notify(new static::$checkinClass($params));
 //            } catch (\Exception $e) {
-//                \Log::debug($e);
+//                Log::debug($e);
 //            }
 //
 //        }
@@ -190,7 +199,7 @@ trait Loggable
 //            try {
 //                $recipient->notify(new static::$checkinClass($params));
 //            } catch (\Exception $e) {
-//                \Log::debug($e);
+//                Log::debug($e);
 //            }
 //
 //        }

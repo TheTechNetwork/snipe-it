@@ -8,7 +8,6 @@ use App\Models\CustomField;
 use App\Models\CustomFieldset;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Redirect;
 
 /**
  * This controller handles all actions related to Custom Asset Fields for
@@ -260,7 +259,7 @@ class CustomFieldsController extends Controller
         
         $field->name          = trim(e($request->get("name")));
         $field->element       = e($request->get("element"));
-        $field->field_values  = e($request->get("field_values"));
+        $field->field_values  = $request->get("field_values");
         $field->user_id       = Auth::id();
         $field->help_text     = $request->get("help_text");
         $field->show_in_email = $show_in_email;
