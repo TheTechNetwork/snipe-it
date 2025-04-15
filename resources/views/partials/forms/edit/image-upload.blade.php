@@ -1,10 +1,10 @@
 <!-- Image stuff - kept in /resources/views/partials/forms/edit/image-upload.blade.php -->
 <!-- Image Delete -->
-@if (isset($item) && ($item->image) && ($item->image!=''))
+@if (isset($item) && ($item->{($fieldname ?? 'image')}))
     <div class="form-group{{ $errors->has('image_delete') ? ' has-error' : '' }}">
         <div class="col-md-9 col-md-offset-3">
             <label class="form-control">
-                {{ Form::checkbox('image_delete', '1', old('image_delete'), ['aria-label'=>'image_delete']) }}
+                <input type="checkbox" name="image_delete" value="1" @checked(old('image_delete')) aria-label="image_delete">
                 {{ trans('general.image_delete') }}
                 {!! $errors->first('image_delete', '<span class="alert-msg">:message</span>') !!}
             </label>
@@ -12,7 +12,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-9 col-md-offset-3">
-            <img src="{{ Storage::disk('public')->url($image_path.e($item->image)) }}" class="img-responsive">
+            <img src="{{ Storage::disk('public')->url($image_path.e($item->{($fieldname ?? 'image')})) }}" class="img-responsive">
             {!! $errors->first('image_delete', '<span class="alert-msg">:message</span>') !!}
         </div>
     </div>

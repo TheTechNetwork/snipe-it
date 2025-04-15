@@ -2,24 +2,29 @@
 
 return [
 
-    'undeployable' 		=> '<strong>Внимание:</strong> Този актив е маркиран като невъзможен за предоставяне. Ако статусът е променен, моля обновете актива.',
-    'does_not_exist' 	=> 'Активът не съществува.',
-    'does_not_exist_var'=> 'Asset with tag :asset_tag not found.',
-    'no_tag' 	        => 'No asset tag provided.',
+    'undeployable' 		 => '<strong>Warning: </strong> This asset has been marked as currently undeployable. If this status has changed, please update the asset status.',
+    'does_not_exist' 	 => 'Активът не съществува.',
+    'does_not_exist_var' => 'Активът с етике :asset_tag не е намерен.',
+    'no_tag' 	         => 'Не е предоставен етикет на актив.',
     'does_not_exist_or_not_requestable' => 'Актива не съществува или не може да бъде предоставян.',
-    'assoc_users'	 	=> 'Активът е изписан на потребител и не може да бъде изтрит. Моля впишете го обратно и след това опитайте да го изтриете отново.',
-    'warning_audit_date_mismatch' 	=> 'This asset\'s next audit date (:next_audit_date) is before the last audit date (:last_audit_date). Please update the next audit date.',
+    'assoc_users'	 	 => 'Активът е изписан на потребител и не може да бъде изтрит. Моля впишете го обратно и след това опитайте да го изтриете отново.',
+    'warning_audit_date_mismatch' 	=> 'Следващата дата на одит на този актив (:next_audit_date) е преди последната дата на одит (:last_audit_date). Моля, актуализирайте следващата дата на одита.',
+    'labels_generated'   => 'Labels were successfully generated.',
+    'error_generating_labels' => 'Error while generating labels.',
+    'no_assets_selected' => 'No assets selected.',
 
     'create' => [
         'error'   		=> 'Активът не беше създаден. Моля опитайте отново.',
         'success' 		=> 'Активът създаден успешно.',
         'success_linked' => 'Артикул с етикет :tag беше създаден успешно. <strong><a href=":link" style="color: white;">Щракнете тук за да го видите</a></strong>.',
+        'multi_success_linked' => 'Asset with tag :links was created successfully.|:count assets were created succesfully. :links.',
+        'partial_failure' => 'An asset was unable to be created. Reason: :failures|:count assets were unable to be created. Reasons: :failures',
     ],
 
     'update' => [
         'error'   			=> 'Активът не беше обновен. Моля опитайте отново.',
         'success' 			=> 'Активът обновен успешно.',
-        'encrypted_warning' => 'Asset updated successfully, but encrypted custom fields were not due to permissions',
+        'encrypted_warning' => 'Активът беше актуализиран успешно, но шифрованите персонализирани полета не бяха актуализирани поради разрешения',
         'nothing_updated'	=>  'Няма избрани полета, съответно нищо не беше обновено.',
         'no_assets_selected'  =>  'Няма избрани активи, така че нищо не бе обновено.',
         'assets_do_not_exist_or_are_invalid' => 'Избраните активи не могат да се обновят.',
@@ -33,7 +38,7 @@ return [
     ],
 
     'audit' => [
-        'error'   		=> 'Asset audit unsuccessful: :error ',
+        'error'   		=> 'Одитът на активите е неуспешен: :error ',
         'success' 		=> 'Активният одит бе успешно регистриран.',
     ],
 
@@ -51,20 +56,24 @@ return [
     ],
 
     'import' => [
+        'import_button'         => 'Process Import',
         'error'                 => 'Някои елементи не бяха въведени правилно.',
         'errorDetail'           => 'Следните елементи не бяха въведени поради грешки.',
         'success'               => 'Вашият файл беше въведен.',
         'file_delete_success'   => 'Вашият файл беше изтрит успешно.',
         'file_delete_error'      => 'Файлът не е в състояние да бъде изтрит',
         'file_missing' => 'Избраният файл липсва',
+        'file_already_deleted' => 'The file selected was already deleted',
         'header_row_has_malformed_characters' => 'Един или повече атрибути на заглавния ред съдържат неправилни UTF-8 символи',
         'content_row_has_malformed_characters' => 'Един или повече атрибути на заглавния ред съдържат неправилни UTF-8 символи',
+        'transliterate_failure' => 'Transliteration from :encoding to UTF-8 failed due to invalid characters in input'
     ],
 
 
     'delete' => [
         'confirm'   	=> 'Сигурни ли сте, че желаете изтриване на актива?',
         'error'   		=> 'Проблем при изтриване на актива. Моля опитайте отново.',
+        'assigned_to_error' => '{1}Asset Tag: :asset_tag is currently checked out. Check in this device before deletion.|[2,*]Asset Tags: :asset_tag are currently checked out. Check in these devices before deletion.',
         'nothing_updated'   => 'Няма избрани активи, така че нищо не бе изтрито.',
         'success' 		=> 'Активът е изтрит успешно.',
     ],
@@ -77,6 +86,11 @@ return [
         'no_assets_selected' => 'Трябва да изберете поне един елемент към списъка',
     ],
 
+    'multi-checkout' => [
+        'error'   => 'Asset was not checked out, please try again|Assets were not checked out, please try again',
+        'success' => 'Asset checked out successfully.|Assets checked out successfully.',
+    ],
+
     'checkin' => [
         'error'   		=> 'Активът не беше вписан. Моля опитайте отново.',
         'success' 		=> 'Активът вписан успешно.',
@@ -86,9 +100,10 @@ return [
     ],
 
     'requests' => [
-        'error'   		=> 'Активът не беше изискан. Моля опитайте отново.',
-        'success' 		=> 'Активът изискан успешно.',
-        'canceled'      => 'Заявка за отписване отказана успешно',
+        'error'   		=> 'Request was not successful, please try again.',
+        'success' 		=> 'Request successfully submitted.',
+        'canceled'      => 'Request successfully canceled.',
+        'cancel'        => 'Отмени тази заявка за артикул',
     ],
 
 ];

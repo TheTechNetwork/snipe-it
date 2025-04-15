@@ -12,7 +12,10 @@ return [
         'generated'             => 'Neue Backup Datei erfolgreich erstellt.',
         'file_not_found'        => 'Backup Datei konnte nicht gefunden werden.',
         'restore_warning'       => 'Ja, wiederherstellen. Ich bestätige, dass dies alle vorhandenen Daten überschreibt, die derzeit in der Datenbank vorhanden sind. Diese Aktion wird auch alle bestehenden Benutzer abmelden (einschließlich Dir).',
-        'restore_confirm'       => 'Bist Du sicher, dass Du Deine Datenbank aus :filename wiederherstellen möchten?'
+        'restore_confirm'       => 'Bist du sicher, dass du deine Datenbank aus :filename wiederherstellen möchten?'
+    ],
+    'restore' => [
+        'success'               => 'Ihr Systembackup wurde wiederhergestellt. Bitte melde dich erneut an.'
     ],
     'purge' => [
         'error'     => 'Beim Bereinigen ist ein Fehler augetreten. ',
@@ -23,7 +26,7 @@ return [
         'sending' => 'Test E-Mail wird gesendet...',
         'success' => 'Mail gesendet!',
         'error' => 'E-Mail konnte nicht gesendet werden.',
-        'additional' => 'Keine zusätzliche Fehlermeldung vorhanden. Überprüfe Deine E-Mail-Einstellungen und Dein App-Protokoll.'
+        'additional' => 'Keine zusätzliche Fehlermeldung vorhanden. Überprüfe deine E-Mail-Einstellungen und dein App-Protokoll.'
     ],
     'ldap' => [
         'testing' => 'Teste LDAP Verbindung, Binding & Abfrage ...',
@@ -33,6 +36,9 @@ return [
         'testing_authentication' => 'LDAP-Authentifizierung wird getestet...',
         'authentication_success' => 'Benutzer wurde erfolgreich gegen LDAP authentifiziert!'
     ],
+    'labels' => [
+        'null_template' => 'Etikettenvorlage nicht gefunden. Bitte wähle eine Vorlage aus.',
+        ],
     'webhook' => [
         'sending' => ':app Testnachricht wird gesendet ...',
         'success' => 'Deine :webhook_name Integration funktioniert!',
@@ -42,5 +48,13 @@ return [
         'error' => 'Etwas ist schiefgelaufen. :app antwortete mit: :error_message',
         'error_redirect' => 'FEHLER: 301/302 :endpoint gibt eine Umleitung zurück. Aus Sicherheitsgründen folgen wir keine Umleitungen. Bitte verwende den aktuellen Endpunkt.',
         'error_misc' => 'Etwas ist schiefgelaufen! :( ',
-    ]
+        'webhook_fail' => ' Webhook-Benachrichtigung fehlgeschlagen: Überprüfe, ob die URL noch gültig ist.',
+        'webhook_channel_not_found' => ' Webhook-Channel nicht gefunden.'
+    ],
+
+    'location_scoping' => [
+        'not_saved' => 'Your settings were not saved.',
+        'mismatch' => 'There is 1 item in the database that need your attention before you can enable location scoping.|There are :count items in the database that need your attention before you can enable location scoping.',
+    ],
+
 ];

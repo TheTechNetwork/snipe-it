@@ -24,6 +24,7 @@ class UserPresenter extends Presenter
             [
                 'field' => 'checkbox',
                 'checkbox' => true,
+                'titleTooltip' => trans('general.select_all_none'),
             ],
             [
                 'field' => 'id',
@@ -186,6 +187,14 @@ class UserPresenter extends Presenter
                 'sortable' => true,
                 'switchable' => true,
                 'title' => trans('general.employee_number'),
+                'visible' => false,
+            ],
+            [
+                'field' => 'locale',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.language'),
                 'visible' => false,
             ],
             [
@@ -353,6 +362,14 @@ class UserPresenter extends Presenter
                 'title' => trans('general.created_at'),
                 'visible' => false,
                 'formatter' => 'dateDisplayFormatter',
+            ], [
+                'field' => 'updated_at',
+                'searchable' => true,
+                'sortable' => true,
+                'switchable' => true,
+                'title' => trans('general.updated_at'),
+                'visible' => false,
+                'formatter' => 'dateDisplayFormatter',
             ],
             [
                 'field' => 'start_date',
@@ -445,25 +462,29 @@ class UserPresenter extends Presenter
             return Storage::disk('public')->url('avatars/'.e($this->avatar));
         }
 
-        // If there is a default avatar
-        if (Setting::getSettings()->default_avatar!= '') {
+
+        // If the default is system default
+        if (Setting::getSettings()->default_avatar == 'default.png') {
+            return Storage::disk('public')->url('default.png');
+        }
+
+        // If there is a custom default avatar
+        if (Setting::getSettings()->default_avatar != '') {
             return Storage::disk('public')->url('avatars/'.e(Setting::getSettings()->default_avatar));
         }
 
-        // Fall back to Gravatar if the settings allow loading remote scripts
-        if (Setting::getSettings()->load_remote == '1') {
-            if ($this->model->gravatar != '') {
+        // If there is no default and no custom avatar, check for gravatar
+        if ((Setting::getSettings()->load_remote == '1') && (Setting::getSettings()->default_avatar == '')) {
 
+            if ($this->model->gravatar != '') {
                 $gravatar = md5(strtolower(trim($this->model->gravatar)));
                 return '//gravatar.com/avatar/'.$gravatar;
 
             } elseif ($this->email != '') {
-
                 $gravatar = md5(strtolower(trim($this->email)));
                 return '//gravatar.com/avatar/'.$gravatar;
             }
         }
-
 
         return false;
     }
@@ -488,6 +509,6 @@ class UserPresenter extends Presenter
 
     public function glyph()
     {
-        return '<i class="fas fa-user" aria-hidden="true"></i>';
+        return '<x-icon type="user"/>';
     }
 }
